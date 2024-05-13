@@ -58,6 +58,7 @@ import projectionBundle from './projection-bundle';
 import projectsBundle from './projects-bundle';
 import qualityControl from './quality-control';
 import rainfallBundle from './rainfall-bundle';
+import reportConfigurationsBundle from './report-configurations-bundle';
 import routesBundle from './routes-bundle';
 import submittalsBundle from './submittals-bundle';
 import timeseriesBundle from './time-series-bundle';
@@ -75,10 +76,11 @@ const mockTokenApplicationAdmin =
 // const mockTokenProjectMember =
 //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwibmFtZSI6IlVzZXIuUHJvamVjdE1lbWJlciIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoyMDAwMDAwMDAwLCJyb2xlcyI6W119.ujBvw9bCksuSbXGJreIpdXZcVIHtb8GhgviBTvrO9AQ';
 
-const jwtPaths = [
-  '/members',
-  '/datalogger',
-];
+// const jwtPaths = [
+//   '/members',
+//   '/datalogger',
+//   '/report_configs',
+// ];
 
 export default composeBundles(
   createAuthBundle({
@@ -94,17 +96,18 @@ export default composeBundles(
         : import.meta.env.VITE_API_URL,
     tokenSelector: 'selectAuthTokenRaw',
     unless: {
+      // Example Scenario:
+      //
       // GET requests do not include token unless path starts with /my_ or includes any path in the jwtPaths array.
-      // Need token to figure out who "me" is
-      custom: ({ method, path }) => {
-        if (method === 'GET') {
-          if (path.slice(0, 4) === '/my_' || jwtPaths.some(el => path.includes(el))) {
-            return false;
-          }
-          return true;
-        }
-        return false;
-      },
+      // custom: ({ method, path }) => {
+      //   if (method === 'GET') {
+      //     if (path.slice(0, 4) === '/my_' || jwtPaths.some(el => path.includes(el))) {
+      //       return false;
+      //     }
+      //     return true;
+      //   }
+      //   return false;
+      // },
     },
   }),
   createCacheBundle({
@@ -160,6 +163,7 @@ export default composeBundles(
   projectsBundle,
   qualityControl,
   rainfallBundle,
+  reportConfigurationsBundle,
   routesBundle,
   submittalsBundle,
   timeseriesBundle,

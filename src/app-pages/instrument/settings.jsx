@@ -48,7 +48,11 @@ export default connect(
 
     return (
       <Card>
-        <TabContainer tabs={tabs} tabListClass='card-header pb-0' contentClass='card-body' />
+        <TabContainer
+          tabs={tabs}
+          tabListClass='card-header pb-0'
+          contentClass='card-body'
+        />
       </Card>
     );
   }

@@ -54,14 +54,16 @@
 
 .card-header {
   background-color: #f7f7f7 !important;
-  z-index: 2;
+  display: block !important;
+  width: 100vw;
+  padding: 7px;
 }
 
 .page-margin {
-  margin-top: 98px;
+  margin-top: 73px;
 
   &.banner {
-    margin-top: 130px
+    margin-top: 105px;
   }
 }
 

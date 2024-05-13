@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'redux-bundler-react';
+import { AppBar, Box,  Toolbar, Typography } from '@mui/material';
 import { ChevronRight, Timeline } from '@mui/icons-material';
 
 import DevBanner from './devBanner';
 import NavItem from './navItem';
 import ProfileMenu from './profileMenu';
-import { classArray } from '../../common/helpers/utils';
+import { useWindowSize } from 'react-use';
 
 import './navigation.scss';
 
@@ -35,78 +36,78 @@ const NavBar = connect(
     relativePathname: pathname,
   }) => {
     const [hideBrand, setHideBrand] = useState(false);
-    const [brand, setBrand] = useState(null);
+    const [hideProject, setHideProject] = useState(false);
+    const [brand, setBrand] = useState('MIDAS');
     const [theme, setTheme] = useState('primary');
+    const { width } = useWindowSize();
 
-    const showDevBanner = import.meta.env.VITE_DEVELOPMENT_BANNER === 'true';
-
-    const navClass = classArray([
-      'navbar',
-      'navbar-expand-lg',
-      'navbar-dark',
-      theme !== 'transparent' ? 
-        showDevBanner ? 'fixed-top-banner' : 'fixed-top'
-        : showDevBanner ? 'transparent-nav-banner' : '',
-      `bg-${theme}`,
-    ]);
+    const isTransparent = theme === 'transparent';
+    const showDevBanner = import.meta.env.VITE_DEVELOPMENT_BANNER === 'true';    
 
     useEffect(() => {
       const { hideBrand, brand, theme } = customTheme[pathname] || {};
 
       setHideBrand(hideBrand);
-      setBrand(brand);
+      setBrand(brand || 'MIDAS');
       setTheme(theme || 'primary');
     }, [pathname]);
+
+    useEffect(() => {
+      if (width < 750) {
+        setHideProject(true);
+      } else {
+        setHideProject(false);
+      }
+    })
 
     return (
       <>
         {showDevBanner && <DevBanner />}
-        <nav className={navClass}>
-          {hideBrand ? null : (
-            <span className='navbar-brand'>
-              <strong>
-                <a href='/' className='text-white'>
-                  <Timeline className='pr-1 pb-1' />
-                  {brand || 'MIDAS'}
-                </a>
-              </strong>
-              {project && project.name && (
+        <AppBar
+          position={isTransparent ? 'relative' : 'fixed'}
+          sx={{
+            backgroundColor: isTransparent ? 'none' : '#2C3E50',
+            marginTop: showDevBanner ? '32px' : '0',
+            zIndex: 10,
+          }}
+          color='transparent'
+          elevation={isTransparent ? 0 : 1}
+        >
+          <Toolbar>
+            <Box sx={{ flexGrow: 1 }}>
+              {!hideBrand && (
                 <>
-                  <ChevronRight fontSize='inherit' sx={{ paddingBottom: '3px' }} />
-                  <a href={`/${project.slug}#dashboard`} className='text-white'>
-                    {project.name}
+                  <a href={`/`} className='text-white'>
+                    <Timeline className='pr-1 pb-1' />
+                    <Typography sx={{ fontSize: 20 }} component={'span'}>{brand}</Typography>
                   </a>
+                  {project && project.name && !hideProject && (
+                    <>
+                      <ChevronRight fontSize='inherit' sx={{ paddingBottom: '3px', fontSize: 20, color: 'white', margin: '0 5px' }} />
+                      <a href={`/${project.slug}#dashboard`} className='text-white'>
+                        <Typography sx={{ fontSize: 16 }} component={'span'}>{project.name}</Typography>
+                      </a>
+                    </>
+                  )}
                 </>
               )}
-            </span>
-          )}
-          <button
-            className='navbar-toggler'
-            type='button'
-            aria-expanded='false'
-            aria-label='Toggle navigation'
-          >
-            <span className='navbar-toggler-icon' />
-          </button>
-
-          <div className='collapse navbar-collapse'>
-            <ul className='navbar-nav mr-auto' />
-            <ul className='navbar-nav'>
+            </Box>
+            <Box>
               {pathname === '/help' ? (
                 <NavItem href='/'>Home</NavItem>
               ) : (
                 <NavItem href='/help'>Help</NavItem>
               )}
-              <div className='mx-2'>
+              <span className='mx-2 d-inline-block'>
                 {authIsLoggedIn ? (
                   <ProfileMenu />
                 ) : (
                   <NavItem handler={doAuthLogin}>Login</NavItem>
                 )}
-              </div>
-            </ul>
-          </div>
-        </nav>
+              </span>
+            </Box>
+          </Toolbar>
+        </AppBar>
       </>
     );
   }

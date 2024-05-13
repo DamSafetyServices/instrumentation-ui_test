@@ -7,7 +7,13 @@ import { IconButton } from '@mui/material';
 import Card from '../../app-components/card';
 import { classArray } from '../../common/helpers/utils';
 
-const STATUS_ORDER = ['Active', 'Lost', 'Inactive', 'Abandoned', 'Destroyed'];
+const STATUS_ORDER = [
+  'Active',
+  // 'Lost',
+  'Inactive',
+  // 'Abandoned',
+  // 'Destroyed',
+];
 
 const getLegendItemClasses = (allItems = [], currentItem) => {
   const isEmpty = allItems.length === 0;
@@ -57,7 +63,7 @@ export default connect(
         value: s.value,
         order: STATUS_ORDER.indexOf(title),
       };
-    }).sort((a, b) => (a.order > b.order ? 1 : -1));
+    }).filter(el => el.order !== -1).sort((a, b) => (a.order > b.order ? 1 : -1));
 
     const currentTypes = instrument_type.filter(type => instruments.some(i => i.type_id === type.id));
 

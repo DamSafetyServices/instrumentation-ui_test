@@ -63,7 +63,7 @@ export default connect(
             saveIsSubmit
             customClosingLogic
             onCancel={() => doModalClose()}
-            onDelete={handleDelete}
+            onDelete={item && item.id ? handleDelete : null}
           />
         </form>
       </div>

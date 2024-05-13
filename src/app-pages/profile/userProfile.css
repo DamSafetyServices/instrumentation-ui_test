@@ -6,5 +6,5 @@
 .limit-height {
   max-height: 80vh;
   overflow-x: auto;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }

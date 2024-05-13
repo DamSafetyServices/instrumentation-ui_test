@@ -59,7 +59,17 @@ const ConfigurationPanel = connect(
         doBatchPlotConfigurationsSave({
           ...isEditMode && { id: batchPlotConfigurationsActiveId },
           name: newConfigName.trim(),
-          timeseries_id: selectedTimeseries,
+          display: {
+            traces: selectedTimeseries.map((id, index) => ({
+              timeseries_id: id,
+              color: '#ffffff',
+              trace_order: index,
+              y_axis: 'y1',
+              line_style: 'solid',
+              show_markers: true,
+              width: 3,
+            }))
+          },
           project_id: project.projectId,
         });
         closePanel();

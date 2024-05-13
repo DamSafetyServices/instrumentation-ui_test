@@ -76,8 +76,6 @@ const Chart = ({
         style={{ width: '100%', height: '100%' }}
         onInitialized={updateState}
         onUpdate={updateState}
-        // eslint-disable-next-line no-console
-        onClick={(e) => console.log(e)}
       />
     </div>
   );

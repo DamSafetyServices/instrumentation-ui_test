@@ -1,4 +1,7 @@
 .nav-item {
+  display: table-cell;
+  min-width: fit-content;
+  white-space: nowrap;
   user-select: none;
 
   &.active {
@@ -12,7 +15,9 @@
 }
 
 .nav-tabs {
+  display: table-row;
   border-bottom: 1px solid #c8cacb !important;
+  overflow: hidden !important;
 
   .nav-link.active {
     border-color: #c8cacb #c8cacb #fff !important;

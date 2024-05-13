@@ -22,6 +22,8 @@ const InstrumentStatusCard = connect(
     const instrumentsByStatus = reduceInstrumentsByStatus(instruments);
     const dataValues = Object.values(instrumentsByStatus);
 
+
+    // NOTE: Possibly remove yellow -> gray
     return (
       <Card className='mt-3'>
         <Card.Header text='Instrument Status' />

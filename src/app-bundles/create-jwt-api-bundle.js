@@ -129,9 +129,11 @@ const createJwtApiBundle = (opts) => {
         tokenSelector: store[selectTokenSelector](),
       });
 
-      const defaultHeaders = token => ({
-        Authorization: `Bearer ${token}`,
-      });
+      const defaultHeaders = token => (
+        token ? {
+          Authorization: `Bearer ${token}`,
+        } : {}
+      );
 
       return {
         apiFetch: (path, options = {}) => {

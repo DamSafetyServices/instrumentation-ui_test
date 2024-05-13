@@ -53,6 +53,8 @@ const getColumnDefs = (measurements, inclinometerMeasurements, activeTimeseries,
         : [];
 
   const keys = items && items.length ? Object.keys(items[0]) : [];
+
+  // TODO: SET COLUMN DEF MANAULLY
   const columnDefs = [
     {
       headerName: '',

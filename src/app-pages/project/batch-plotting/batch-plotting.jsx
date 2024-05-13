@@ -18,7 +18,7 @@ const batchPlotContainsInclinometers = (activeId, items, timeseries, instruments
   };
   if (!Object.keys(items).length || !activeId) return ret;
   const config = items[activeId];
-  const { timeseries_id } = config || {};
+  const { timeseries_id } = config?.display?.traces?.map(el => el.timeseries_id) || {};
 
   if (!timeseries_id) return ret;
 
@@ -73,49 +73,59 @@ const BatchPlotting = connect(
             <Card.Header text='Plot Data Configuration' />
             <DataConfiguration initialConfigurationId={userConfigId} />
           </Card>
-          <div className='row mt-4'>
-            <div
-              className={`${crossSectionReady ? 'col col-sm-5' : 'col-sm-12'}`}
-            >
-              <Card style={{ minHeight: '400px' }}>
+          {batchPlotId && (
+            <>
+              <Card className='w-100 mt-4'>
                 <Card.Body>
-                  <Map
-                    mapKey='batchPlotMap'
-                    doMapsInitialize={doMapsInitialize}
-                    doMapsShutdown={doMapsShutdown}
-                    mapsObject={mapsObject}
-                  />
+                  This Batch Plot Configuration is a part of the following reports. Click on the report name to download the report or click on the&nbsp;
+                  <b>Remove</b> Button to remove the plot configuration from the correlated Report Configuration.
                 </Card.Body>
               </Card>
-            </div>
-            {crossSectionReady && (
-              <div className='col col-sm-7'>
-                <Card className='h-100'>
-                  <Card.Header text='Cross Section' />
-                  <Card.Body isContentCentered>
-                    <div className='text-muted pt-4'>
-                      <Engineering sx={{ fontSize: '64px', marginTop: '64px' }} />
-                      <h5>Currently Under Construction</h5>
-                    </div>
-                  </Card.Body>
-                </Card>
+              <div className='row mt-4'>
+                <div
+                  className={`${crossSectionReady ? 'col col-sm-5' : 'col-sm-12'}`}
+                >
+                  <Card style={{ minHeight: '400px' }}>
+                    <Card.Body>
+                      <Map
+                        mapKey='batchPlotMap'
+                        doMapsInitialize={doMapsInitialize}
+                        doMapsShutdown={doMapsShutdown}
+                        mapsObject={mapsObject}
+                      />
+                    </Card.Body>
+                  </Card>
+                </div>
+                {crossSectionReady && (
+                  <div className='col col-sm-7'>
+                    <Card className='h-100'>
+                      <Card.Header text='Cross Section' />
+                      <Card.Body isContentCentered>
+                        <div className='text-muted pt-4'>
+                          <Engineering sx={{ fontSize: '64px', marginTop: '64px' }} />
+                          <h5>Currently Under Construction</h5>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <Card className='w-100 my-4 p-3'>
-            <TabContainer
-              tabs={[
-                {
-                  title: 'Batch Plot Chart',
-                  content: <BatchPlotChart />,
-                },
-                containsInclinometers && {
-                  title: 'Depth Based Plot',
-                  content: <DepthChart inclinometerTimeseriesIds={inclinometerTimeseriesIds} />
-                },
-              ]}
-            />
-          </Card>
+              <Card className='w-100 my-4 p-3'>
+                <TabContainer
+                  tabs={[
+                    {
+                      title: 'Batch Plot Chart',
+                      content: <BatchPlotChart />,
+                    },
+                    containsInclinometers && {
+                      title: 'Depth Based Plot',
+                      content: <DepthChart inclinometerTimeseriesIds={inclinometerTimeseriesIds} />
+                    },
+                  ].filter(e => e)}
+                />
+              </Card>
+            </>
+          )}
         </section>
       </>
     );

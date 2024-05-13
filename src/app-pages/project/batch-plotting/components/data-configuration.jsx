@@ -47,6 +47,7 @@ const DataConfiguration = connect(
 
       if (currentItem) {
         doBatchPlotConfigurationsDelete(currentItem);
+        doBatchPlotConfigurationsSetActiveId('');
       }
     };
 

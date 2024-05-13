@@ -9,6 +9,7 @@ const NavItem = connect(
     const cls = classArray([
       'pointer',
       'nav-item',
+      'd-inline-block',
       pathname.indexOf(href) !== -1 && href !== '/' && 'active',
     ]);
 
@@ -19,11 +20,11 @@ const NavItem = connect(
     return !hidden ?
       handler ? (
         <li className={cls} onClick={handleClick}>
-          <span className='nav-link'>{children}</span>
+          <span className='nav-link text-white'>{children}</span>
         </li>
       ) : (
         <li className={cls}>
-          <a className='nav-link' href={href}>
+          <a className='nav-link text-white p-3' href={href}>
             {children}
           </a>
         </li>

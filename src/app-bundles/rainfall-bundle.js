@@ -59,7 +59,7 @@ const rainfallBundle = {
         x: [],
         y: [],
         xaxis: 'x',
-        yaxis: 'y2',
+        yaxis: 'y3',
         line: {
           color: '#0062ff',
         },

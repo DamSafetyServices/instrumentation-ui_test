@@ -8,14 +8,17 @@ import InstrumentGroupCard from './cards/instrumentGroupCard';
 import InstrumentStatusCard from './cards/instrumentStatusCard';
 import InstrumentTypeCard from './cards/instrumentTypeCard';
 import { isUserAllowed } from '../../../app-components/role-filter';
+import ReportConfigsCard from './cards/reportConfigsCard';
 
 const ProjectDashboard = connect(
   'doFetchDataLoggersByProjectId',
+  'doFetchReportConfigurationsByProjectId',
   'selectProfileRolesObject',
   'selectProfileIsAdmin',
   'selectProjectsByRoute',
   ({
     doFetchDataLoggersByProjectId,
+    doFetchReportConfigurationsByProjectId,
     profileRolesObject,
     profileIsAdmin,
     projectsByRoute: project,
@@ -24,11 +27,12 @@ const ProjectDashboard = connect(
 
     useEffect(() => {
       doFetchDataLoggersByProjectId();
-    }, [doFetchDataLoggersByProjectId]);
+      doFetchReportConfigurationsByProjectId();
+    }, [doFetchDataLoggersByProjectId, doFetchReportConfigurationsByProjectId]);
 
     return (
       project ? (
-        <div className='row px-3 pb-4'>
+        <div className='row mx-2 mb-4'>
           <div className='col-8'>
             <InstrumentGroupCard />
             <CollectionGroupCard />
@@ -36,6 +40,7 @@ const ProjectDashboard = connect(
               ? <DataLoggerCard />
               : null
             }
+            <ReportConfigsCard />
           </div>
           <div className='col-4'>
             <InstrumentTypeCard />

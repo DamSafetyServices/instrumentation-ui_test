@@ -49,7 +49,7 @@ const Project = connect(
       }, {
         title: <Title text='Explorer' icon={<ExploreOutlined fontSize='inherit' sx={{ marginBottom: '2px' }} />} />,
         content: <Explorer />,
-        paddingSmall: true,
+        paddingSmall: false,
         uri: '#explorer',
       }, {
         title: <Title text='All Instruments' icon={<Speed fontSize='inherit' sx={{ marginBottom: '2px' }} />} />,

@@ -44,8 +44,8 @@ export default createRestBundle({
       dispatch({ type: 'TIMESERIES_FETCH_BY_ID_START', payload: {} });
       const [after, before] = dateRange;
 
-      const isoAfter = after ? after.toISOString() : afterDate;
-      const isoBefore = before ? before.toISOString() : beforeDate;
+      const isoAfter = after ? after?.toISOString() : afterDate;
+      const isoBefore = before ? before?.toISOString() : beforeDate;
 
       const url = `/timeseries/${timeseriesId}/measurements?after=${isoAfter}&before=${isoBefore}&threshold=${threshold}`;
       const flags = store['selectTimeseriesMeasurementsFlags']();

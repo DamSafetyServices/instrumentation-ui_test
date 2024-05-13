@@ -27,7 +27,7 @@ const AdminPage = connect(
   
     return (
       <div className='container-fluid'>
-        <Card className='m-2'>
+        <Card>
           <Card.Header className='d-flex justify-content-between'>
             <b>Current Project Members
               <Badge type='pill' variant='secondary' text={memberKeys.length} className='ml-2'/>

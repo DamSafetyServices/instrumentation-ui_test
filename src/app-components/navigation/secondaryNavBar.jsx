@@ -1,7 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'redux-bundler-react';
+import { Box, Tab, Tabs, tabsClasses } from '@mui/material';
 
-import TabContainer from '../tab/tabContainer';
+const CustomTabPanel = props => {
+  const { children, value, active, paddingTop } = props;
+
+  return (
+    <div
+      role='tabpanel'
+      hidden={value !== active}
+      id={`tabpanel-${value}`}
+      aria-labelledby={`tab-${value}`}
+    >
+      {value === active && (
+        <Box sx={{ paddingTop: paddingTop ? 3 : 1 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
 
 const SecondaryNavBar = connect(
   'selectHashStripQuery',
@@ -9,43 +27,49 @@ const SecondaryNavBar = connect(
     hashStripQuery,
     navLinks = [],
   }) => {
-    const getIndex = () => navLinks.findIndex(elem => elem.uri == `#${hashStripQuery}`);
-
-    const defaultTab = hashStripQuery ? getIndex() : () => {
+    const defaultTab = hashStripQuery ? `#${hashStripQuery}` : () => {
       location.hash = navLinks[0].uri;
-      return 0;
+      return navLinks[0].uri;
     };
     const [navTab, setNavTab] = useState(defaultTab);
-    const [forceUpdateIncrement, setForceUpdateIncrement] = useState(0);
 
-    const onTabChange = (_, index) => {
-      location.hash = navLinks[index].uri;
-      setNavTab(index);
+    const onTabChange = (_, newHash) => {
+      location.hash = newHash;
+      setNavTab(newHash);
     };
 
+    // Handle External Hash Manipulation (eg: navbar)
     useEffect(() => {
-      if (navLinks[navTab]) {
-        if (`#${hashStripQuery}` !== navLinks[navTab].uri) {
-          setForceUpdateIncrement(forceUpdateIncrement + 1);
-        }
-      } else {
-        location.assign('/not-found');
+      if (navTab !== `#${hashStripQuery}`) {
+        setNavTab(`#${hashStripQuery}`);
       }
-    }, [navLinks, hashStripQuery, navTab, setForceUpdateIncrement]);
+    }, [navTab, hashStripQuery, setNavTab]);
 
     return (
-      <div className='secondary-nav-container'>
-        <div className='secondary-nav-heading' />
-        <TabContainer
-          key={forceUpdateIncrement}
-          tabs={navLinks}
-          tabListClass='secondary-nav-tabs'
-          contentClass='secondary-nav-page-content'
-          onTabChange={onTabChange}
-          defaultTab={defaultTab}
-          changeTabDelay={350}
-        />
-      </div>
+      <>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            value={navTab}
+            onChange={onTabChange}
+            variant='scrollable'
+            scrollButtons='auto'
+            sx={{
+              [`& .${tabsClasses.scrollButtons}`]: {
+                '&.Mui-disabled': { opacity: 0.25 },
+              },
+            }}
+          >
+            {navLinks.map(link => (
+              <Tab key={`${link.uri}-tab`} label={link.title} value={link.uri} />
+            ))}
+          </Tabs>
+        </Box>
+        {navLinks.map(link => (
+          <CustomTabPanel key={`${link.uri}-content`} value={link.uri} active={navTab} paddingTop={link.paddingSmall}>
+            {link.content}
+          </CustomTabPanel>
+        ))}
+      </>
     );
   }
 );

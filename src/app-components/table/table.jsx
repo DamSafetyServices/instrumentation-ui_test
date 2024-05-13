@@ -57,7 +57,7 @@ const Table = ({
     columnHelper.accessor(column.key, {
       ...column,
       header: () => column.header,
-      cell: val => column.render ? column.render(val?.row?.original) : val.getValue(),
+      cell: val => column.render ? column.render(val?.row?.original, val.getValue()) : val.getValue(),
       enableSorting: !!column.isSortable,
       enableColumnFilter: !!column.isFilterable,
     })

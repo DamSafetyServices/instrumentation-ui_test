@@ -1,19 +1,30 @@
-const getStyle = (_index) => ({
-  type: 'scatter',
-  mode: 'lines+markers',
-  marker: {
-    size: 8,
-  },
-  line: {
-    width: 2,
-  },
-});
+const getStyle = (trace) => {
+  const { color, line_style, show_markers, width, y_axis } = trace;
+  const lineColor = color === '#ffffff' ? null : color;
+  
+  return {
+    type: 'scattergl',
+    mode: show_markers ? 'lines+markers' : 'lines',
+    showlegend: false,
+    yaxis: y_axis,
+    line: {
+      dash: line_style,
+      color: lineColor,
+      width: width,
+    },
+    marker: {
+      size: Number(width) ? (Number(width) * 2) + 3 : 5,
+      color: lineColor,
+    },
+  };
+};
 
-export const generateNewChartData = (measurements, timeseries, chartSettings) => {
+export const generateNewChartData = (measurements, timeseries, chartSettings, plotConfig) => {
   const { show_comments, show_masked, show_nonvalidated } = chartSettings || {};
+  const { traces } = plotConfig?.display || {};
 
   if (measurements.length && timeseries.length) {
-    const data = measurements.map((elem, index) => {
+    const data = measurements.map(elem => {
       if (elem && timeseries.length) {
         const { items, timeseries_id } = elem;
 
@@ -49,22 +60,24 @@ export const generateNewChartData = (measurements, timeseries, chartSettings) =>
           { x: [], y: [], hovertext: [] }
         );
 
+
+        const trace = traces.find(el => el.timeseries_id === timeseries_id);
+
         return parameter === 'precipitation' ? {
+          ...getStyle(trace),
           x: x,
           y: y,
           type: 'bar',
-          yaxis: 'y2',
+          yaxis: 'y3',
           name: `${instrument} - ${name} (${unit})` || '',
           hovertext: show_comments ? hovertext : [],
           hoverinfo: 'x+y+text',
           showlegend: true,
           timeseriesId: timeseries_id,
         } : {
-          ...getStyle(index),
+          ...getStyle(trace),
           x: x,
           y: y,
-          type: 'scattergl',
-          mode: 'lines',
           name: `${instrument} - ${name} (${unit})` || '',
           showlegend: true,
           hovertext: show_comments ? hovertext : [],
@@ -79,27 +92,3 @@ export const generateNewChartData = (measurements, timeseries, chartSettings) =>
 
   return [];
 };
-
-
-/*
-
-Could instead check for first date that is above the lower range and splice out all lower
-and check for first data lower than upper range and splice all higher
-
-assumption: sorted by dates
-
-*/
-// export const limitDatabyDateRange = (datedData = [], dateRange) => {
-//   if (datedData[0] && datedData[0].x && datedData[0].y) {
-//     for (let i = 0; i < datedData[0].x.length; i++) {
-//       const tempDate = new Date(datedData[0].x[i]);
-//       if (tempDate > dateRange[1] || tempDate < dateRange[0]) {
-//         datedData[0].x.splice(i, 1);
-//         datedData[0].y.splice(i, 1);
-//         i--;
-//       }
-//     }
-//   }
-
-//   return datedData;
-// };

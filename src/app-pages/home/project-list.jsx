@@ -80,50 +80,48 @@ export default connect(
     const [inputString, setInputString] = useState('');
     const columnHelper = createColumnHelper();
 
-    const columns = useMemo(
-      () => [
-        columnHelper.accessor('districtId', {
-          header: 'District',
-          id: 'districtId',
-          enableColumnFilter: false,
-          sortingFn: (a, b) => sortByDistrictName(a, b, districts),
-          cell: (info) => (
-            <>
-              {info.row.getCanExpand() && (
-                <IconButton onClick={info.row.getToggleExpandedHandler()}>
-                  {info.row.getIsExpanded() ? (
-                    <KeyboardArrowUp />
-                  ) : (
-                    <KeyboardArrowDown />
-                  )}
-                </IconButton>
-              )}
-              {mapDistrictName(info.getValue(), info.row.subRows.length, districts)}
-            </>
-          ),
-        }),
-        columnHelper.accessor('title', {
-          header: 'Project Name',
-          id: 'title',
-          enableColumnFilter: false,
-          cell: (info) => (
-            <a href={info?.row?.original?.href}>{info.getValue()}</a>
-          ),
-        }),
-        columnHelper.accessor('instrumentCount', {
-          header: 'Instrument Count',
-          id: 'instrumentCount',
-          enableColumnFilter: false,
-          enableSorting: false,
-        }),
-        columnHelper.accessor('instrumentGroupCount', {
-          header: 'Instrument Group Count',
-          id: 'instrumentGroupCount',
-          enableColumnFilter: false,
-          enableSorting: false,
-        }),
-      ],
-    [districts]);
+    const columns = useMemo(() => [
+      columnHelper.accessor('districtId', {
+        header: 'District',
+        id: 'districtId',
+        enableColumnFilter: false,
+        sortingFn: (a, b) => sortByDistrictName(a, b, districts),
+        cell: (info) => (
+          <>
+            {info.row.getCanExpand() && (
+              <IconButton onClick={info.row.getToggleExpandedHandler()}>
+                {info.row.getIsExpanded() ? (
+                  <KeyboardArrowUp />
+                ) : (
+                  <KeyboardArrowDown />
+                )}
+              </IconButton>
+            )}
+            {mapDistrictName(info.getValue(), info.row.subRows.length, districts)}
+          </>
+        ),
+      }),
+      columnHelper.accessor('title', {
+        header: 'Project Name',
+        id: 'title',
+        enableColumnFilter: false,
+        cell: (info) => (
+          <a href={info?.row?.original?.href}>{info.getValue()}</a>
+        ),
+      }),
+      columnHelper.accessor('instrumentCount', {
+        header: 'Instrument Count',
+        id: 'instrumentCount',
+        enableColumnFilter: false,
+        enableSorting: false,
+      }),
+      columnHelper.accessor('instrumentGroupCount', {
+        header: 'Instrument Group Count',
+        id: 'instrumentGroupCount',
+        enableColumnFilter: false,
+        enableSorting: false,
+      }),
+    ], [districts]);
 
     const onChange = selected => {
       const { value } = selected;

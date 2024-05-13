@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 
 import TabItem from './tabItem';
 
 import './tab.scss';
+import useWindowDimensions from '../../customHooks/useWindowDimensions';
+import { useDeepCompareEffect } from 'react-use';
 
 /**
  * A component used to switch between large page contexts within a single page of the application.
@@ -24,8 +26,11 @@ const TabContainer = ({
   changeTabDelay = 0,
   ...customProps
 }) => {
+  const ref = createRef();
+  const [displayedTabs, setDisplayedTabs] = useState(tabs);
   const [tabIndex, setTabIndex] = useState(defaultTab);
   const [isDisabled, setIsDisabled] = useState(false);
+  const { width: windowWidth } = useWindowDimensions();
 
   const changeTab = (title, index) => {
     onTabChange(title, index);
@@ -39,10 +44,31 @@ const TabContainer = ({
     }
   }, [isDisabled, setIsDisabled]);
 
+  useDeepCompareEffect(() => {
+    const diff = tabs.length - displayedTabs.length;
+
+    if (ref.current.clientWidth > windowWidth) {
+      const clone = [...tabs];
+      
+      clone.splice((tabs.length - diff) - 2, diff + 2);
+      setDisplayedTabs(clone);
+    } else {
+      if (diff && ((ref.current.clientWidth + 165) < windowWidth)) {
+        const clone = [...tabs];
+
+        if (diff !== 1) {
+          clone.splice(tabs.length - (diff - 1), diff - 1);
+        }
+
+        setDisplayedTabs(clone);
+      }
+    }
+  }, [ref, windowWidth, tabs, displayedTabs]);
+
   return (
-    <div {...customProps}>
-      <ul className={`nav nav-tabs ${tabListClass}`}>
-        {tabs.map((t, i) => (
+    <div {...customProps} style={{ overflow: 'hidden' }}>
+      <ul className={`nav nav-tabs ${tabListClass}`} ref={ref}>
+        {displayedTabs.map((t, i) => (
           <TabItem
             key={i}
             tab={t}

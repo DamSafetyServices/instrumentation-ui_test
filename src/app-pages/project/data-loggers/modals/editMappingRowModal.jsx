@@ -15,6 +15,7 @@ const generateTimeseriesOptions = (timeseries = {}, selectedInstrument) => {
   const tIds = Object.keys(timeseries);
 
   return tIds.map(t => {
+    if (timeseries[t].is_computed) return null;
     if (timeseries[t].instrument_id === selectedInstrument) {  
       return ({
         label: timeseries[t].name,

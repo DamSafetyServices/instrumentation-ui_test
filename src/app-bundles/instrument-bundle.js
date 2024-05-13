@@ -153,10 +153,19 @@ export default createRestBundle({
               properties: { ...rest },
             };
 
-            const inStatusFilter = statusFilters.length ? statusFilters.includes(status) : true;
+            const inStatusFilter = () => {
+              if (statusFilters.length) {
+                if (statusFilters.includes('inactive')) {
+                  return [...statusFilters, 'lost', 'destroyed', 'abandoned'].includes(status);
+
+                } else {
+                  return statusFilters.includes(status);
+                }
+              } else return true;
+            };
             const inTypeFilter = typeFilters.length ? typeFilters.includes(type_id) : true;
 
-            return (inStatusFilter && inTypeFilter)
+            return (inStatusFilter() && inTypeFilter)
               ? feature
               : null;
           }).filter(e => e),
